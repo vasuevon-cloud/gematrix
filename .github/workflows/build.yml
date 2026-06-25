@@ -20,10 +20,10 @@ jobs:
         run: |
           pip install buildozer cython
 
-      - name: Hard reset build environment
+      - name: FORCE clean environment
         run: |
           rm -rf ~/.buildozer ~/.android
 
       - name: Build APK
         run: |
-          buildozer -v android debug
+          buildozer android debug
