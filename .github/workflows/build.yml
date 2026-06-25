@@ -18,8 +18,23 @@ jobs:
 
       - name: Install Buildozer
         run: |
-          pip install buildozer cython
+          pip install --user buildozer cython
+
+      - name: Install Android SDK (FORCE STABLE 34)
+        run: |
+          mkdir -p $HOME/android-sdk
+          export ANDROID_SDK_ROOT=$HOME/android-sdk
+
+          yes | $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager --licenses || true
+
+          $ANDROID_SDK_ROOT/cmdline-tools/bin/sdkmanager \
+            "platform-tools" \
+            "platforms;android-33" \
+            "build-tools;34.0.0"
 
       - name: Build APK
         run: |
           buildozer android debug
+
+
+
