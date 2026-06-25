@@ -18,13 +18,12 @@ jobs:
 
       - name: Install Buildozer
         run: |
-          pip install --upgrade pip
           pip install buildozer cython
 
-      - name: Force Android SDK override (CRITICAL FIX)
+      - name: HARD BLOCK Android SDK install (CRITICAL FIX)
         run: |
-          export BUILDOZER_ALLOW_SDK_UPGRADE=0
-          export P4A_RELEASE=stable
+          export P4A_NO_DISTRIBUTE=1
+          export BUILDOZER_NO_ANDROID_SDK=1
           rm -rf ~/.buildozer ~/.android
 
       - name: Build APK
