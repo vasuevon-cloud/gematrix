@@ -1,26 +1,14 @@
-name: Build APK
+- name: Accept Android licenses
+        run: yes | sdkmanager --licenses || true
 
-on:
-  push:
-    branches: [ main ]
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - name: Install dependencies
+      - name: Install Android build-tools 34
         run: |
-          sudo apt update
-          sudo apt install -y python3-pip git zip unzip openjdk-17-jdk
-
-      - name: Install Buildozer
-        run: |
-          pip install buildozer cython
+          sdkmanager "build-tools;34.0.0"
 
       - name: Build APK
         run: |
           buildozer android debug
+- name: Fix SDK tools
+        run: |
+          sdkmanager --install "platform-tools" "platforms;android-33" "build-tools;34.0.0"
+          yes | sdkmanager --licenses
