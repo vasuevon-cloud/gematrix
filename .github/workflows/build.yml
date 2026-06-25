@@ -18,9 +18,9 @@ jobs:
 
       - name: Install Buildozer
         run: |
-          pip install buildozer cython
+          pip install --user buildozer cython
 
-      - name: Force clean Buildozer cache
+      - name: Clean Buildozer cache
         run: |
           rm -rf ~/.buildozer
 
