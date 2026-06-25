@@ -11,19 +11,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install system deps
+      - name: Install system dependencies
         run: |
           sudo apt update
           sudo apt install -y python3-pip git zip unzip openjdk-17-jdk
 
       - name: Install Buildozer
         run: |
+          pip install --upgrade pip
           pip install buildozer cython
 
-      - name: FORCE clean environment
+      - name: Force Android SDK override (CRITICAL FIX)
         run: |
+          export BUILDOZER_ALLOW_SDK_UPGRADE=0
+          export P4A_RELEASE=stable
           rm -rf ~/.buildozer ~/.android
 
       - name: Build APK
         run: |
-          buildozer android debug
+          buildozer -v android debug
