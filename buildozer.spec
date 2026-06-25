@@ -15,4 +15,4 @@ fullscreen = 1
 
 android.api = 33
 android.minapi = 21
-
+p4a.branch = release-2023.09.16
