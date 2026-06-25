@@ -18,11 +18,11 @@ jobs:
 
       - name: Install Buildozer
         run: |
-          pip install --user buildozer cython
+          pip install buildozer cython
 
-      - name: Clean Buildozer cache
+      - name: Hard reset build environment
         run: |
-          rm -rf ~/.buildozer
+          rm -rf ~/.buildozer ~/.android
 
       - name: Build APK
         run: |
