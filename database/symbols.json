@@ -1,0 +1,19 @@
+{
+  "azazel": {
+    "themes": ["exile", "wilderness", "judgment", "scapegoat"],
+    "traditions": ["Judaism", "Apocrypha", "Mysticism"],
+    "related": ["samael", "saturn", "desert"]
+  },
+
+  "metatron": {
+    "themes": ["divine order", "knowledge", "ascension"],
+    "traditions": ["Judaism", "Kabbalah"],
+    "related": ["tree of life", "enoch"]
+  },
+
+  "raven": {
+    "themes": ["prophecy", "transformation", "messenger"],
+    "traditions": ["Biblical", "Norse", "Celtic"],
+    "related": ["odin", "crow", "wisdom"]
+  }
+}
