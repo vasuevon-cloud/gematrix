@@ -1,5 +1,5 @@
 [app]
-p4a.branch = release-2023.09.16
+p4a.branch = master
 title = GEMATRIX
 package.name = gematrix
 package.domain = org.gematrix
