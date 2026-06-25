@@ -13,7 +13,6 @@ version = 0.1
 orientation = portrait
 fullscreen = 1
 
-[app]
 android.api = 33
 android.minapi = 21
 p4a.branch = release-2022.09.20
