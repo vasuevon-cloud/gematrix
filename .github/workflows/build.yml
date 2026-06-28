@@ -1,4 +1,4 @@
-name: Build APK
+name: Build APK (p4a Kivy)
 
 on:
   push:
@@ -19,17 +19,27 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt update
-          sudo apt install -y git zip unzip openjdk-17-jdk build-essential libffi-dev libssl-dev
+          sudo apt install -y git zip unzip openjdk-17-jdk build-essential \
+          libffi-dev libssl-dev liblzma-dev libsqlite3-dev
 
       - name: Install Python dependencies
         run: |
-          pip install --upgrade pip setuptools wheel cython buildozer
+          pip install --upgrade pip setuptools wheel cython kivy
+          pip install python-for-android
 
-      - name: Build APK
+      - name: Build APK with p4a
         run: |
-          buildozer android clean || true
-          rm -rf .buildozer
-          buildozer -v android debug
+          p4a apk \
+            --private $PWD \
+            --package org.gematrix.app \
+            --name Gematrix \
+            --version 0.1 \
+            --bootstrap=sdl2 \
+            --requirements=python3,kivy \
+            --arch arm64-v8a \
+            --ndk-api 21 \
+            --output-dir bin
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
