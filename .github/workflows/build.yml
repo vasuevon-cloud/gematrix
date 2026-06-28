@@ -17,16 +17,15 @@ jobs:
           python-version: "3.11"
 
       - name: Install system dependencies
-        run: |
-          sudo apt update
-          sudo apt install -y git zip unzip openjdk-17-jdk build-essential \
-          libffi-dev libssl-dev liblzma-dev libsqlite3-dev
-
+  run: |
+    sudo apt update
+    sudo apt install -y \
+      git zip unzip openjdk-17-jdk build-essential \
+      autoconf automake libtool pkg-config \
+      m4 libffi-dev libssl-dev liblzma-dev libsqlite3-dev
       - name: Install Python dependencies
         run: |
-          pip install --upgrade pip setuptools wheel cython kivy==2.3.0
-          pip install python-for-android
-      - name: Build APK with p4a
+             pip install python-for-android==2024.1.21      - name: Build APK with p4a
         run: |
           p4a apk \
             --private $PWD \
