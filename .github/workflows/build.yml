@@ -24,9 +24,8 @@ jobs:
 
       - name: Install Python dependencies
         run: |
-          pip install --upgrade pip setuptools wheel cython kivy
+          pip install --upgrade pip setuptools wheel cython kivy==2.3.0
           pip install python-for-android
-
       - name: Build APK with p4a
         run: |
           p4a apk \
@@ -37,9 +36,9 @@ jobs:
             --bootstrap=sdl2 \
             --requirements=python3,kivy \
             --arch arm64-v8a \
+            --android-api 34 \
             --ndk-api 21 \
             --output-dir bin
-
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
