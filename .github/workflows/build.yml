@@ -1,4 +1,4 @@
-name: Build APK (Clean Kivy)
+name: Build APK (Stable No-SDK)
 
 on:
   push:
@@ -9,8 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -26,21 +25,21 @@ jobs:
             autoconf automake libtool pkg-config \
             libffi-dev libssl-dev liblzma-dev libsqlite3-dev
 
-      - name: Install Python tools
+      - name: Install Buildozer
         run: |
-          pip install --upgrade pip setuptools wheel cython
-          pip install buildozer
+          pip install --upgrade pip setuptools wheel cython buildozer
 
-      - name: Initialize Buildozer (first run safe)
+      - name: Force non-interactive Android build
         run: |
-          buildozer init || true
-
-      - name: Build APK
-        run: |
+          export ANDROID_ACCEPT_LICENSES=yes
+          export BUILDOZER_ALLOW_SDK_UPGRADE=0
+          export P4A_NO_PROMPT=1
+          export GRADLE_OPTS="-Dorg.gradle.daemon=false"
+          buildozer android clean || true
           buildozer -v android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: gematrix-apk
-          path: bin/*.apk
+          name: apk
+          path: bin/*.apk      - 
