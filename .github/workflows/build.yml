@@ -1,4 +1,4 @@
-name: Build APK (Stable No-SDK)
+name: Build APK (P4A Clean)
 
 on:
   push:
@@ -9,14 +9,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      - name: Install system dependencies
+      - name: System deps
         run: |
           sudo apt update
           sudo apt install -y \
@@ -25,21 +26,27 @@ jobs:
             autoconf automake libtool pkg-config \
             libffi-dev libssl-dev liblzma-dev libsqlite3-dev
 
-      - name: Install Buildozer
+      - name: Install p4a
         run: |
-          pip install --upgrade pip setuptools wheel cython buildozer
+          pip install --upgrade pip setuptools wheel cython
+          pip install python-for-android kivy
 
-      - name: Force non-interactive Android build
+      - name: Build APK (NO SDK, NO PROMPTS)
         run: |
-          export ANDROID_ACCEPT_LICENSES=yes
-          export BUILDOZER_ALLOW_SDK_UPGRADE=0
-          export P4A_NO_PROMPT=1
-          export GRADLE_OPTS="-Dorg.gradle.daemon=false"
-          buildozer android clean || true
-          buildozer -v android debug
+          p4a apk \
+            --private $PWD \
+            --package org.gematrix.app \
+            --name Gematrix \
+            --version 0.1 \
+            --bootstrap=sdl2 \
+            --requirements=python3,kivy \
+            --arch arm64-v8a \
+            --ndk-api 21 \
+            --android-api 34 \
+            --output-dir bin
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: apk
-          path: bin/*.apk      - 
+          path: bin/*.apk
