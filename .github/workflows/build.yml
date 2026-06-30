@@ -1,4 +1,4 @@
-name: Build APK (P4A Clean)
+name: Build APK (Docker p4a stable)
 
 on:
   push:
@@ -8,30 +8,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    container:
+      image: kivy/android-sdk:latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: System deps
+      - name: Install project deps
         run: |
-          sudo apt update
-          sudo apt install -y \
-            git zip unzip openjdk-17-jdk \
-            build-essential \
-            autoconf automake libtool pkg-config \
-            libffi-dev libssl-dev liblzma-dev libsqlite3-dev
+          pip install --upgrade pip
+          pip install cython kivy python-for-android
 
-      - name: Install p4a
-        run: |
-          pip install --upgrade pip setuptools wheel cython
-          pip install python-for-android kivy
-
-      - name: Build APK (NO SDK, NO PROMPTS)
+      - name: Build APK
         run: |
           p4a apk \
             --private $PWD \
