@@ -1,4 +1,4 @@
-name: Build APK (Stable Android Container)
+name: Build APK (Pinned p4a stable)
 
 on:
   push:
@@ -8,16 +8,32 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    container:
-      image: ghcr.io/kivy/android:latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Build APK
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install system deps
         run: |
-          pip install cython kivy python-for-android
+          sudo apt update
+          sudo apt install -y \
+            git zip unzip openjdk-17-jdk \
+            build-essential \
+            autoconf automake libtool pkg-config \
+            libffi-dev libssl-dev liblzma-dev libsqlite3-dev
+
+      - name: Install stable p4a stack
+        run: |
+          pip install --upgrade pip setuptools wheel
+          pip install cython==0.29.36
+          pip install kivy==2.3.0
+          pip install python-for-android==2024.1.21
+
+      - name: Build APK (stable flags)
+        run: |
           p4a apk \
             --private $PWD \
             --package org.gematrix.app \
@@ -28,6 +44,8 @@ jobs:
             --arch arm64-v8a \
             --ndk-api 21 \
             --android-api 34 \
+            --no-deps \
+            --ignore-setup-py \
             --output-dir bin
 
       - name: Upload APK
