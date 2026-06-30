@@ -1,4 +1,4 @@
-name: Build APK (Stable Docker Buildozer)
+name: Build APK (Clean p4a no Buildozer)
 
 on:
   push:
@@ -8,16 +8,41 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    container:
-      image: ghcr.io/kivy/buildozer:latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Build APK
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install system deps
         run: |
-          buildozer android debug
+          sudo apt update
+          sudo apt install -y \
+            git zip unzip openjdk-17-jdk \
+            build-essential \
+            autoconf automake libtool pkg-config \
+            libffi-dev libssl-dev liblzma-dev libsqlite3-dev
+
+      - name: Install p4a toolchain
+        run: |
+          pip install --upgrade pip setuptools wheel cython
+          pip install python-for-android kivy
+
+      - name: Build APK (NO prompts, NO Buildozer)
+        run: |
+          p4a apk \
+            --private $PWD \
+            --package org.gematrix.app \
+            --name Gematrix \
+            --version 0.1 \
+            --bootstrap=sdl2 \
+            --requirements=python3,kivy \
+            --arch arm64-v8a \
+            --ndk-api 21 \
+            --android-api 34 \
+            --output-dir bin
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
